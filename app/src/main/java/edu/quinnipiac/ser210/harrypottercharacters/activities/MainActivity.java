@@ -1,8 +1,10 @@
-package edu.quinnipiac.ser210.harrypottercharacters;
+package edu.quinnipiac.ser210.harrypottercharacters.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import edu.quinnipiac.ser210.harrypottercharacters.R;
 
 public class MainActivity extends AppCompatActivity {
 
