@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import edu.quinnipiac.ser210.harrypottercharacters.data.Character;
 
-public class FetchCharactersTask extends AsyncTask<String,Void, Collection<Character>> {
+public class FetchCharactersTask extends AsyncTask<String,Void, ArrayList<Character>> {
 
     private static String buildURL(String... endpoints) {
         return "https://hp-api.herokuapp.com/api/" + String.join(",",endpoints);
@@ -27,7 +27,7 @@ public class FetchCharactersTask extends AsyncTask<String,Void, Collection<Chara
     }
 
     @Override
-    protected Collection<Character> doInBackground(String... strings) {
+    protected ArrayList<Character> doInBackground(String... strings) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         StringBuffer string = new StringBuffer();
@@ -64,16 +64,16 @@ public class FetchCharactersTask extends AsyncTask<String,Void, Collection<Chara
     }
 
     @Override
-    protected void onPostExecute(Collection<Character> characters) {
+    protected void onPostExecute(ArrayList<Character> characters) {
         if(listener != null) {
             listener.onFetchCharacters(characters);
         }
         super.onPostExecute(characters);
     }
 
-    private Collection<Character> convertJson(String json) {
+    private ArrayList<Character> convertJson(String json) {
         try {
-            Collection<Character> characters = new ArrayList<>();
+            ArrayList<Character> characters = new ArrayList<>();
             JSONArray jsonArray = new JSONArray(json);
             for(int i = 0; i < jsonArray.length(); i++) {
                 characters.add(new Character(jsonArray.getJSONObject(i)));
