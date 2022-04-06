@@ -4,70 +4,68 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import edu.quinnipiac.ser210.harrypottercharacters.Keys;
 import edu.quinnipiac.ser210.harrypottercharacters.R;
-import edu.quinnipiac.ser210.harrypottercharacters.data.Character;
+import edu.quinnipiac.ser210.harrypottercharacters.adapter.CharacterAdapter;
+import edu.quinnipiac.ser210.harrypottercharacters.async.FetchCharactersTask;
+import edu.quinnipiac.ser210.harrypottercharacters.data.HarryPotterCharacter;
 
-public class CharacterListFragment extends ListFragment {
+public class CharacterListFragment extends Fragment {
 
-    private static final String KEY_CHARACTERS = "Character";
+    private final ArrayList<HarryPotterCharacter> harryPotterCharacters = new ArrayList<>();
+    private CharacterAdapter mAdapter;
 
-    private ArrayList<Character> characters;
-    private CharacterListListener listener;
-
-    public CharacterListFragment() {
-
-    }
-
-    public void setListener(CharacterListListener listener) {
-        this.listener = listener;
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof CharacterListListener) {
-            listener = (CharacterListListener) context;
-        }
+    }
+
+    public void setListener(CharacterClickedListener listener) {
+        mAdapter.setListener(listener);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_character_list,container,false);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        RecyclerView recyclerView = view.findViewById(R.id.characters_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        if(savedInstanceState != null) {
-            characters = savedInstanceState.getParcelableArrayList(KEY_CHARACTERS);
-        }
+        mAdapter = new CharacterAdapter(getContext(),harryPotterCharacters);
+
+        recyclerView.setAdapter(mAdapter);
+
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_character_list, container, false);
+    public void setHarryPotterCharacters(Collection<HarryPotterCharacter> characters) {
+        harryPotterCharacters.clear();
+        harryPotterCharacters.addAll(characters);
+        mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        if(listener != null) {
-            listener.onCharacterClicked(characters.get(position));
-        }
+    public interface CharacterClickedListener {
+        void onCharacterSelected(HarryPotterCharacter character);
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(KEY_CHARACTERS,characters);
-    }
-
-    public interface CharacterListListener {
-        void onCharacterClicked(Character character);
-    }
 }

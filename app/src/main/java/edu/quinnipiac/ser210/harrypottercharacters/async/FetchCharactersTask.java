@@ -3,6 +3,7 @@ package edu.quinnipiac.ser210.harrypottercharacters.async;
 import android.os.AsyncTask;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,12 +13,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import edu.quinnipiac.ser210.harrypottercharacters.data.Character;
+import edu.quinnipiac.ser210.harrypottercharacters.data.HarryPotterCharacter;
 
-public class FetchCharactersTask extends AsyncTask<String,Void, ArrayList<Character>> {
+public class FetchCharactersTask extends AsyncTask<String,Void, ArrayList<HarryPotterCharacter>> {
 
     private static String buildURL(String... endpoints) {
-        return "https://hp-api.herokuapp.com/api/" + String.join(",",endpoints);
+        return "https://hp-api.herokuapp.com/api/" + String.join("/",endpoints);
     }
 
     private FetchCharactersListener listener;
@@ -27,7 +28,7 @@ public class FetchCharactersTask extends AsyncTask<String,Void, ArrayList<Charac
     }
 
     @Override
-    protected ArrayList<Character> doInBackground(String... strings) {
+    protected ArrayList<HarryPotterCharacter> doInBackground(String... strings) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         StringBuffer string = new StringBuffer();
@@ -64,21 +65,22 @@ public class FetchCharactersTask extends AsyncTask<String,Void, ArrayList<Charac
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Character> characters) {
+    protected void onPostExecute(ArrayList<HarryPotterCharacter> harryPotterCharacters) {
         if(listener != null) {
-            listener.onFetchCharacters(characters);
+            listener.onFetchCharacters(harryPotterCharacters);
         }
-        super.onPostExecute(characters);
+        super.onPostExecute(harryPotterCharacters);
     }
 
-    private ArrayList<Character> convertJson(String json) {
+    private ArrayList<HarryPotterCharacter> convertJson(String json) {
         try {
-            ArrayList<Character> characters = new ArrayList<>();
+            ArrayList<HarryPotterCharacter> harryPotterCharacters = new ArrayList<>();
             JSONArray jsonArray = new JSONArray(json);
             for(int i = 0; i < jsonArray.length(); i++) {
-                characters.add(new Character(jsonArray.getJSONObject(i)));
+                JSONObject object = jsonArray.getJSONObject(i);
+                harryPotterCharacters.add(new HarryPotterCharacter(object));
             }
-            return characters;
+            return harryPotterCharacters;
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -86,6 +88,6 @@ public class FetchCharactersTask extends AsyncTask<String,Void, ArrayList<Charac
     }
 
     public interface FetchCharactersListener {
-        void onFetchCharacters(Collection<Character> characters);
+        void onFetchCharacters(ArrayList<HarryPotterCharacter> harryPotterCharacters);
     }
 }
