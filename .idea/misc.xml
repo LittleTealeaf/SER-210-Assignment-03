@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/drawable/ic_launcher_background.xml" value="0.206" />
+        <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/activity_character_detail.xml" value="0.1685185185185185" />
+        <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/activity_character_details.xml" value="0.1685185185185185" />
         <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/activity_character_list.xml" value="0.1" />
         <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/fragment_character_details.xml" value="0.3625" />
         <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/fragment_character_list.xml" value="0.3625" />
         <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/list_character_item.xml" value="0.3625" />
       </map>

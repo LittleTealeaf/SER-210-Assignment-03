@@ -1,12 +1,12 @@
 package edu.quinnipiac.ser210.harrypottercharacters.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import edu.quinnipiac.ser210.harrypottercharacters.Keys;
 import edu.quinnipiac.ser210.harrypottercharacters.R;
@@ -51,6 +51,8 @@ public class CharacterListActivity extends AppCompatActivity
 
     @Override
     public void onCharacterSelected(HarryPotterCharacter character) {
-
+        Intent intent = new Intent(this, CharacterDetailsActivity.class );
+        intent.putExtra(Keys.CHARACTER,character);
+        startActivity(intent);
     }
 }
