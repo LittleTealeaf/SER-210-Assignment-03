@@ -21,12 +21,14 @@ import edu.quinnipiac.ser210.harrypottercharacters.data.HarryPotterCharacter;
 
 public class CharacterDetailsFragment extends Fragment implements LoadImageTask.LoadImageListener{
 
-    private View view;
     private HarryPotterCharacter character;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if(savedInstanceState != null) {
+            character = savedInstanceState.getParcelable(Keys.CHARACTER);
+        }
         return inflater.inflate(R.layout.fragment_character_details,container,false);
     }
 
@@ -37,55 +39,57 @@ public class CharacterDetailsFragment extends Fragment implements LoadImageTask.
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        this.view = view;
+    public void onStart() {
+        super.onStart();
 
-        if(savedInstanceState != null) {
-            displayCharacter(savedInstanceState.getParcelable(Keys.CHARACTER));
+        if (character != null) {
+            displayCharacter(character);
         }
     }
 
     public void displayCharacter(HarryPotterCharacter character) {
-        if(this.character != null) {
-            return;
-        }
         this.character = character;
-        if(!character.getImage().equals("")) {
-            new LoadImageTask(this).execute(character.getImage());
-        }
+        if(getView() != null) {
 
-        if (character.getAlternateNames() != null && character.getAlternateNames().length > 0) {
-            StringBuilder builder = new StringBuilder();
-            for (String name : character.getAlternateNames()) {
-                builder.append(", ").append(name);
+
+            setTextWithLabel(R.id.cd_name,"",character.getName());
+
+            if(!character.getImage().equals("")) {
+                new LoadImageTask(this).execute(character.getImage());
             }
 
-            setTextWithLabel(R.id.cd_name_alternates,"", builder.substring(2));
-        } else {
-            hideElement(R.id.cd_name_alternates);
+            if (character.getAlternateNames() != null && character.getAlternateNames().length > 0) {
+                StringBuilder builder = new StringBuilder();
+                for (String name : character.getAlternateNames()) {
+                    builder.append(", ").append(name);
+                }
+
+                setTextWithLabel(R.id.cd_name_alternates,"", builder.substring(2));
+            } else {
+                hideElement(R.id.cd_name_alternates);
+            }
+
+            setTextWithLabel(R.id.cd_house,"",character.getHouse());
+
+            setTextWithLabel(R.id.cd_actor, "Played by: " ,character.getActor());
+
+            setTextWithLabel(R.id.cd_birthdate,"Birthday: ",character.getDateOfBirth());
+            setTextWithLabel(R.id.cd_ancestry,"Ancestry: ",character.getAncestry());
+            setTextWithLabel(R.id.cd_patronus,"Patronus: ",character.getPatronus());
         }
-
-        setTextWithLabel(R.id.cd_house,"",character.getHouse());
-
-        setTextWithLabel(R.id.cd_actor, "Played by: " ,character.getActor());
-
-        setTextWithLabel(R.id.cd_birthdate,"Birthday: ",character.getDateOfBirth());
-        setTextWithLabel(R.id.cd_ancestry,"Ancestry: ",character.getAncestry());
-        setTextWithLabel(R.id.cd_patronus,"Patronus: ",character.getPatronus());
     }
 
     @SuppressLint("SetTextI18n")
     private void setTextWithLabel(int id, String label, String value) {
         if(value != null && !value.equals("")) {
-            ((TextView) view.findViewById(id)).setText(label + (label.equals("") ? "" : " ") + value);
+            ((TextView) getView().findViewById(id)).setText(label + (label.equals("") ? "" : " ") + value);
         } else {
             hideElement(id);
         }
     }
 
     private void hideElement(int id) {
-        View element = view.findViewById(id);
+        View element = getView().findViewById(id);
         if(element instanceof TextView) {
             ((TextView) element).setTextSize(0);
         }
@@ -93,6 +97,6 @@ public class CharacterDetailsFragment extends Fragment implements LoadImageTask.
 
     @Override
     public void onLoadImage(Bitmap bitmap) {
-        ((ImageView) view.findViewById(R.id.cd_image)).setImageBitmap(bitmap);
+        ((ImageView) getView().findViewById(R.id.cd_image)).setImageBitmap(bitmap);
     }
 }

@@ -35,12 +35,16 @@ public class CharacterListActivity extends AppCompatActivity
             onFetchCharacters(savedInstanceState.getParcelableArrayList(Keys.CHARACTERS));
         } else {
             new FetchCharactersTask(this).execute(Category.values()[getIntent().getExtras().getInt(Keys.CATEGORY)].getEndpoint());
+            HarryPotterCharacter character = getIntent().getExtras().getParcelable(Keys.CHARACTER);
+            if(character != null) {
+                onCharacterSelected(character);
+            }
         }
     }
 
     @Override
     public void onFetchCharacters(ArrayList<HarryPotterCharacter> harryPotterCharacters) {
-        characterList.setHarryPotterCharacters(characters = harryPotterCharacters);
+        characterList.onFetchCharacters(characters = harryPotterCharacters);
     }
 
     @Override

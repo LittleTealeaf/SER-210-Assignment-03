@@ -25,11 +25,12 @@ import edu.quinnipiac.ser210.harrypottercharacters.adapter.CharacterAdapter;
 import edu.quinnipiac.ser210.harrypottercharacters.async.FetchCharactersTask;
 import edu.quinnipiac.ser210.harrypottercharacters.data.HarryPotterCharacter;
 
-public class CharacterListFragment extends Fragment {
+public class CharacterListFragment extends Fragment implements FetchCharactersTask.FetchCharactersListener {
 
     private final ArrayList<HarryPotterCharacter> harryPotterCharacters = new ArrayList<>();
     private CharacterAdapter mAdapter;
 
+    private CharacterClickedListener listener;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -37,7 +38,7 @@ public class CharacterListFragment extends Fragment {
     }
 
     public void setListener(CharacterClickedListener listener) {
-        mAdapter.setListener(listener);
+        this.listener = listener;
     }
 
     @Nullable
@@ -47,21 +48,29 @@ public class CharacterListFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        RecyclerView recyclerView = view.findViewById(R.id.characters_recycler_view);
+    public void onStart() {
+        super.onStart();
+
+        RecyclerView recyclerView = getView().findViewById(R.id.characters_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mAdapter = new CharacterAdapter(getContext(),harryPotterCharacters);
+        mAdapter.setListener((character) -> {
+            if(CharacterListFragment.this.listener != null) {
+                CharacterListFragment.this.listener.onCharacterSelected(character);
+            }
+        });
 
         recyclerView.setAdapter(mAdapter);
-
     }
 
-    public void setHarryPotterCharacters(Collection<HarryPotterCharacter> characters) {
-        harryPotterCharacters.clear();
-        harryPotterCharacters.addAll(characters);
-        mAdapter.notifyDataSetChanged();
+    @Override
+    public void onFetchCharacters(ArrayList<HarryPotterCharacter> harryPotterCharacters) {
+        this.harryPotterCharacters.clear();
+        this.harryPotterCharacters.addAll(harryPotterCharacters);
+        if(mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public interface CharacterClickedListener {
