@@ -12,6 +12,14 @@
         <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/fragment_character_details.xml" value="0.3625" />
         <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/fragment_character_list.xml" value="0.3625" />
         <entry key="..\:/Github/SER-210-Assignment-03/app/src/main/res/layout/list_character_item.xml" value="0.3625" />
+        <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.30158730158730157" />
+        <entry key="app/src/main/res/layout/activity_character_details.xml" value="0.333786231884058" />
+        <entry key="app/src/main/res/layout/activity_character_list.xml" value="0.333786231884058" />
+        <entry key="app/src/main/res/layout/activity_color_picker.xml" value="0.17325227963525835" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.17325227963525835" />
+        <entry key="app/src/main/res/layout/fragment_color_picker.xml" value="0.1947463768115942" />
+        <entry key="app/src/main/res/layout/list_character_item.xml" value="0.15217391304347827" />
+        <entry key="app/src/main/res/menu/main.xml" value="0.3" />
       </map>
     </option>
   </component>

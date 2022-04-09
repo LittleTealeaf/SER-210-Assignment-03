@@ -2,12 +2,18 @@ package edu.quinnipiac.ser210.harrypottercharacters.activities;
 
 import static androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import edu.quinnipiac.ser210.harrypottercharacters.Keys;
@@ -25,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
     private Category category;
     private HarryPotterCharacter character;
 
+    private ActivityResultLauncher<Intent> colorLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,17 +43,33 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
         categoryListFragment.setListener(this);
 
         if(savedInstanceState != null) {
-            this.category = Category.values()[savedInstanceState.getInt(Keys.CATEGORY)];
+            int index = savedInstanceState.getInt(Keys.CATEGORY);
+            if(index != -1) {
+                this.category = Category.values()[index];
+            }
             this.character = savedInstanceState.getParcelable(Keys.CHARACTER);
-            if(findViewById(R.id.frame_layout_character_list) != null) {
+            if(findViewById(R.id.frame_layout_character_list) != null && index != -1) {
                 onCategorySelected(category);
             } else {
-                onCategorySelected(category);
+                if(index != -1) {
+                    onCategorySelected(category);
+                }
                 onCharacterSelected(character);
             }
         }
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        colorLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+           if(result.getResultCode() == Activity.RESULT_OK) {
+               assert result.getData() != null;
+           }
+        });
     }
+
+
 
     @Override
     public void onCategorySelected(Category category) {
@@ -95,9 +119,28 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main,menu);
+        menu.findItem(R.id.menu_change_colors).setVisible(true);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.menu_change_colors) {
+            Intent intent = new Intent(this,ColorPickerActivity.class);
+            colorLauncher.launch(intent);
+        }
+
+        return true;
+    }
+
+    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Keys.CATEGORY,category == null ? null : category.ordinal());
+        outState.putInt(Keys.CATEGORY,category == null ? -1 : category.ordinal());
         outState.putParcelable(Keys.CHARACTER,character);
     }
 }

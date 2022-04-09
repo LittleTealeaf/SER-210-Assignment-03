@@ -2,4 +2,7 @@
     <string name="app_name">Harry Potter Characters</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="set_background">Set Background</string>
+    <string name="color">Color</string>
+    <string name="invert_colors">Invert Colors</string>
 </resources>
