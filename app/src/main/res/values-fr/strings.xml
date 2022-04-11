@@ -3,4 +3,8 @@
     <string name="app_name">Les gens d\'Harry Potter</string>
     <string name="color">Couleur</string>
     <string name="invert_colors">Inverser la couleur</string>
+    <string name="set_background">Définir l\'arrière-plan</string>
+    <string name="label_actor">Acteur</string>
+    <string name="label_birthday">Anniversaire</string>
+    <string name="label_ancestry">Ascendance</string>
 </resources>

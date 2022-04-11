@@ -71,10 +71,10 @@ public class CharacterDetailsFragment extends Fragment implements LoadImageTask.
 
             setTextWithLabel(R.id.cd_house,"",character.getHouse());
 
-            setTextWithLabel(R.id.cd_actor, "Played by: " ,character.getActor());
+            setTextWithLabel(R.id.cd_actor, getString(R.string.label_actor) ,character.getActor());
 
-            setTextWithLabel(R.id.cd_birthdate,"Birthday: ",character.getDateOfBirth());
-            setTextWithLabel(R.id.cd_ancestry,"Ancestry: ",character.getAncestry());
+            setTextWithLabel(R.id.cd_birthdate,getString(R.string.label_birthday) + ": ",character.getDateOfBirth());
+            setTextWithLabel(R.id.cd_ancestry,getString(R.string.label_ancestry) + ": ",character.getAncestry());
             setTextWithLabel(R.id.cd_patronus,"Patronus: ",character.getPatronus());
         }
     }
