@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +29,8 @@ import edu.quinnipiac.ser210.harrypottercharacters.fragments.CharacterListFragme
 public class MainActivity extends AppCompatActivity implements CategoryListFragment.CategoryListListener,
                                                                CharacterListFragment.CharacterClickedListener {
 
+    private int backgroundColor = Color.WHITE;
+
     private Category category;
     private HarryPotterCharacter character;
 
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
         categoryListFragment.setListener(this);
 
         if(savedInstanceState != null) {
+            backgroundColor = savedInstanceState.getInt(Keys.COLOR);
             int index = savedInstanceState.getInt(Keys.CATEGORY);
             if(index != -1) {
                 this.category = Category.values()[index];
@@ -56,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
                 }
                 onCharacterSelected(character);
             }
+
+
+            findViewById(android.R.id.content).getRootView().setBackgroundColor(backgroundColor);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -65,11 +72,11 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
         colorLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
            if(result.getResultCode() == Activity.RESULT_OK) {
                assert result.getData() != null;
+               backgroundColor = result.getData().getIntExtra(Keys.COLOR,Color.WHITE);
+               findViewById(android.R.id.content).getRootView().setBackgroundColor(backgroundColor);
            }
         });
     }
-
-
 
     @Override
     public void onCategorySelected(Category category) {
@@ -78,9 +85,11 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
             if(frameLayout == null) {
                 Intent intent = new Intent(this,CharacterListActivity.class);
                 intent.putExtra(Keys.CATEGORY,category.ordinal());
+                intent.putExtra(Keys.COLOR,backgroundColor);
                 if(character != null) {
                     intent.putExtra(Keys.CHARACTER,character);
                 }
+
                 startActivity(intent);
             } else {
                 CharacterListFragment fragment = new CharacterListFragment();
@@ -131,6 +140,9 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
 
         if(id == R.id.menu_change_colors) {
             Intent intent = new Intent(this,ColorPickerActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt(Keys.COLOR,backgroundColor);
+            intent.putExtras(bundle);
             colorLauncher.launch(intent);
         }
 
@@ -142,5 +154,6 @@ public class MainActivity extends AppCompatActivity implements CategoryListFragm
         super.onSaveInstanceState(outState);
         outState.putInt(Keys.CATEGORY,category == null ? -1 : category.ordinal());
         outState.putParcelable(Keys.CHARACTER,character);
+        outState.putInt(Keys.COLOR,backgroundColor);
     }
 }

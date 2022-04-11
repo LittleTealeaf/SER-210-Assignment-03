@@ -21,6 +21,8 @@ public class ColorPickerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
     private ColorListener listener;
 
+    private View view;
+
     public void setListener(ColorListener listener) {
         this.listener = listener;
     }
@@ -33,6 +35,7 @@ public class ColorPickerFragment extends Fragment implements SeekBar.OnSeekBarCh
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.view = view;
         ((Button) view.findViewById(R.id.color_confirm)).setOnClickListener(this::confirm);
 
 
@@ -54,6 +57,7 @@ public class ColorPickerFragment extends Fragment implements SeekBar.OnSeekBarCh
         bar_b.setProgress((int) (color.blue() * 100));
     }
 
+
     protected void confirm(View view) {
         if(listener != null) {
             listener.colorSelected(color);
@@ -62,7 +66,29 @@ public class ColorPickerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        Color tmp = Color.valueOf(color);
+        if(seekBar.getId() == R.id.color_bar_r) {
+            this.color = Color.valueOf((float) (i / 100.0),tmp.green(),tmp.blue()).toArgb();
+        } else if(seekBar.getId() == R.id.color_bar_g) {
+            this.color = Color.valueOf(tmp.red(),(float) (i / 100.0),tmp.blue()).toArgb();
+        } else if(seekBar.getId() == R.id.color_bar_b) {
+            this.color = Color.valueOf(tmp.red(),tmp.green(),(float) (i / 100.0)).toArgb();
+        }
+        updateColorView();
+    }
 
+    public void setColor(int color) {
+        System.out.println("hello");
+        this.color = color;
+        Color c = Color.valueOf(color);
+        ((SeekBar) view.findViewById(R.id.color_bar_r)).setProgress((int) (c.red() * 100));
+        ((SeekBar) view.findViewById(R.id.color_bar_g)).setProgress((int) (c.green() * 100));
+        ((SeekBar) view.findViewById(R.id.color_bar_b)).setProgress((int) (c.blue() * 100));
+        updateColorView();
+    }
+
+    protected void updateColorView() {
+        view.setBackgroundColor(color);
     }
 
     @Override

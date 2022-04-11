@@ -1,6 +1,7 @@
 package edu.quinnipiac.ser210.harrypottercharacters.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ public class CharacterListActivity extends AppCompatActivity
     private ArrayList<HarryPotterCharacter> characters = new ArrayList<>();
     private CharacterListFragment characterList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,8 @@ public class CharacterListActivity extends AppCompatActivity
                 onCharacterSelected(character);
             }
         }
+
+        findViewById(android.R.id.content).getRootView().setBackgroundColor(getIntent().getIntExtra(Keys.COLOR, Color.WHITE));
     }
 
     @Override
@@ -57,6 +61,7 @@ public class CharacterListActivity extends AppCompatActivity
     public void onCharacterSelected(HarryPotterCharacter character) {
         Intent intent = new Intent(this, CharacterDetailsActivity.class );
         intent.putExtra(Keys.CHARACTER,character);
+        intent.putExtra(Keys.COLOR,getIntent().getIntExtra(Keys.COLOR, Color.WHITE));
         startActivity(intent);
     }
 }
