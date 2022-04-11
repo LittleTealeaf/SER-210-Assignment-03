@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Les gens d\'Harry Potter</string>
+    <string name="color">Couleur</string>
+    <string name="invert_colors">Inverser la couleur</string>
+</resources>
